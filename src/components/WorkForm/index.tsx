@@ -19,9 +19,20 @@ export function WorkForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full px-16 py-6 bg-teal-200 rounded-2xl"
+      className="w-full px-10 py-6 bg-teal-200 rounded-2xl"
     >
       <div className="flex gap-2 items-end">
+        <Controller
+          name="date"
+          control={control}
+          render={({ field }) => (
+            <Input.Date
+              label="날짜"
+              onChange={(date: Date | null) => field.onChange(date)}
+              selected={field.value}
+            />
+          )}
+        />
         <Controller
           name="place"
           control={control}
@@ -59,6 +70,13 @@ export function WorkForm() {
         />
         <Controller
           name="workerMobile"
+          control={control}
+          render={({ field }) => (
+            <Input.Text label="작업자 전화 번호" placeholder="" {...field} />
+          )}
+        />
+        <Controller
+          name="payment"
           control={control}
           render={({ field }) => (
             <Input.Text label="작업자 전화 번호" placeholder="" {...field} />
