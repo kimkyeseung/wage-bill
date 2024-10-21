@@ -19,7 +19,10 @@ export function WorkForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full px-10 py-6 bg-teal-200 rounded-2xl"
+      className={classNames(
+        'fixed bottom-10 left-20 right-20',
+        'px-10 py-6 bg-teal-100 rounded-2xl',
+      )}
     >
       <div className="flex gap-2 items-end">
         <Controller
