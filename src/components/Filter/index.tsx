@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Month } from './Month';
+import { Dates } from './Dates';
 
 export function Filter() {
   return (
@@ -10,7 +10,7 @@ export function Filter() {
         'border border-teal-300 bg-teal-50',
       )}
     >
-      <Month />
+      <Dates />
     </div>
   );
 }
