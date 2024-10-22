@@ -13,56 +13,36 @@ interface Props {
 }
 
 export function Row({ datum }: Props) {
+  const fields = [
+    {
+      name: 'date',
+      value: datum.date ? dayjs(datum.date).format(DATE_FORMAT) : '',
+    },
+    { name: 'place', value: datum.place },
+    { name: 'title', value: datum.title },
+    { name: 'client', value: datum.client },
+    { name: 'clientMobile', value: datum.clientMobile },
+    { name: 'workerName', value: datum.workerName },
+    { name: 'workerMobile', value: datum.workerMobile },
+    {
+      name: 'payment',
+      value: datum.payment ? numberFormat(datum.payment) : '',
+    },
+  ];
+
   return (
     <tr className={classNames('hover:bg-gray-100')}>
-      <Td
-        datumId={datum._id}
-        name="date"
-        dangerouslySetInnerHTML={{
-          __html: datum.date ? dayjs(datum.date).format(DATE_FORMAT) : '',
-        }}
-      />
-      <Td
-        datumId={datum._id}
-        name={'place'}
-        dangerouslySetInnerHTML={{
-          __html: datum.place,
-        }}
-      />
-      <Td
-        datumId={datum._id}
-        name="title"
-        dangerouslySetInnerHTML={{ __html: datum.title }}
-      />
-      <Td
-        datumId={datum._id}
-        name="client"
-        dangerouslySetInnerHTML={{
-          __html: datum.client,
-        }}
-      />
-      <Td
-        datumId={datum._id}
-        name="clientMobile"
-        dangerouslySetInnerHTML={{ __html: datum.clientMobile }}
-      />
-      <Td
-        datumId={datum._id}
-        name="workerName"
-        dangerouslySetInnerHTML={{ __html: datum.workerName }}
-      />
-      <Td
-        datumId={datum._id}
-        name="workerMobile"
-        dangerouslySetInnerHTML={{ __html: datum.workerMobile }}
-      />
-      <Td
-        datumId={datum._id}
-        name="payment"
-        dangerouslySetInnerHTML={{
-          __html: datum.payment ? numberFormat(datum.payment) : '',
-        }}
-      />
+      {fields.map((field) => (
+        <Td
+          key={field.name}
+          datumId={datum._id}
+          name={field.name}
+          initialValue={field.value}
+          dangerouslySetInnerHTML={{
+            __html: field.value,
+          }}
+        />
+      ))}
     </tr>
   );
 }
