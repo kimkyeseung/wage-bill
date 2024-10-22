@@ -38,7 +38,7 @@ export const Dropdown = ({ isOpen, onClose, children }: Props) => {
       ref={dropdown}
       onBlur={() => onClose()}
       className={classNames(
-        'absolute left-full top-0',
+        'absolute left-full top-0 z-10',
         'space-y-1 rounded-sm border border-stroke bg-white p-1.5 shadow-default dark:border-strokedark dark:bg-boxdark',
         `${isOpen === true ? 'block' : 'hidden'}`,
       )}

@@ -1,10 +1,14 @@
 import { MonthSelectButton } from './MonthSelectButton';
+import { YearSelectButton } from './YearSelectButton';
 
 export function Dates() {
   return (
-    <div className="flex items-center gap-4">
+    <div>
       날짜:
-      <MonthSelectButton />
+      <div className="inline-flex gap-2 ml-4">
+        <YearSelectButton />
+        <MonthSelectButton />
+      </div>
     </div>
   );
 }
