@@ -17,7 +17,8 @@ interface Props
     PropsWithChildren {
   datumId: string;
   name: string;
-  initialValue: string;
+  initialValue: string | number;
+  isNumberFormat?: boolean;
 }
 
 export function EditableTd({
@@ -30,7 +31,7 @@ export function EditableTd({
 }: Props) {
   const editableRef = useRef<HTMLTableCellElement>(null);
   const router = useRouter();
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(initialValue);
 
   const handleInput = () => {
     if (editableRef.current) {
