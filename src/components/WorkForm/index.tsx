@@ -6,6 +6,7 @@ import { WorkDataInput } from '@/types';
 import * as Input from '@/components/input';
 import { createWork } from './actions';
 import classNames from 'classnames';
+import { allowOnlyNumber, formatPhoneNumber } from '@/lib';
 
 export function WorkForm() {
   const { handleSubmit, control } = useForm({
@@ -61,7 +62,21 @@ export function WorkForm() {
           name="clientMobile"
           control={control}
           render={({ field }) => (
-            <Input.Text label="업체 전화 번호" placeholder="" {...field} />
+            <Input.Text
+              label="업체 전화 번호"
+              placeholder=""
+              {...field}
+              maxLength={11}
+              onChange={(e) => {
+                field.onChange(allowOnlyNumber(e.target.value));
+              }}
+              onFocus={(e) => {
+                field.onChange(allowOnlyNumber(e.target.value));
+              }}
+              onBlur={(e) => {
+                field.onChange(formatPhoneNumber(e.target.value));
+              }}
+            />
           )}
         />
         <Controller
@@ -75,14 +90,35 @@ export function WorkForm() {
           name="workerMobile"
           control={control}
           render={({ field }) => (
-            <Input.Text label="작업자 전화 번호" placeholder="" {...field} />
+            <Input.Text
+              label="작업자 전화 번호"
+              placeholder=""
+              {...field}
+              maxLength={11}
+              onChange={(e) => {
+                field.onChange(allowOnlyNumber(e.target.value));
+              }}
+              onFocus={(e) => {
+                field.onChange(allowOnlyNumber(e.target.value));
+              }}
+              onBlur={(e) => {
+                field.onChange(formatPhoneNumber(e.target.value));
+              }}
+            />
           )}
         />
         <Controller
           name="payment"
           control={control}
           render={({ field }) => (
-            <Input.Text label="작업자 전화 번호" placeholder="" {...field} />
+            <Input.Text
+              label="일당"
+              placeholder=""
+              {...field}
+              onChange={(value) => {
+                field.onChange(allowOnlyNumber(value.target.value));
+              }}
+            />
           )}
         />
         <div>
