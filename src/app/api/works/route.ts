@@ -19,10 +19,8 @@ export async function POST(req: Request) {
   try {
     await connectToDatabase();
     const body = await req.json();
-    console.log("Received body:", body); // 데이터를 로깅하여 확인
     const work = await Work.create(body); // 유효성 검사 및 데이터 생성
 
-    console.log("Work created:", work); // 생성된 데이터를 확인
     return NextResponse.json({ success: true, data: work }, { status: 201 });
   } catch (error) {
     console.log(error);
