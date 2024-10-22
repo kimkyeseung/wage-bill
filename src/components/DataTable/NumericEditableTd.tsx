@@ -11,16 +11,17 @@ import { updateWork } from './actions';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { Td } from './Td';
+import { areEqualNumericValues, numberFormat } from '@/lib';
 
 interface Props
   extends HTMLAttributes<HTMLTableCellElement>,
     PropsWithChildren {
   datumId: string;
   name: string;
-  initialValue: string | number;
+  initialValue: number;
 }
 
-export function EditableTd({
+export function NumericEditableTd({
   children,
   className,
   datumId,
@@ -30,7 +31,15 @@ export function EditableTd({
 }: Props) {
   const editableRef = useRef<HTMLTableCellElement>(null);
   const router = useRouter();
-  const [content, setContent] = useState(initialValue);
+  const [content, setContent] = useState(
+    initialValue ? String(initialValue) : '',
+  );
+
+  const handleFocus = () => {
+    if (initialValue && editableRef.current) {
+      editableRef.current.innerHTML = String(initialValue);
+    }
+  };
 
   const handleInput = () => {
     if (editableRef.current) {
@@ -39,10 +48,25 @@ export function EditableTd({
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLTableCellElement> = (e) => {
-    if (e.keyCode === 229) return; // 한글 입력시 마지막 글자가 중복입력 되는 문제 해결하기 위해 필요.
-    if (e.key === 'Enter') {
+    if (!editableRef.current) {
+      return;
+    }
+    const isNumber = /[0-9]/.test(e.key);
+    const isAllowedKeys = [
+      'ArrowRight',
+      'ArrowUp',
+      'ArrowLeft',
+      'ArrowDown',
+      'Tab',
+      'Backspace',
+      'Delete',
+    ].includes(e.key);
+
+    if (!isNumber && !isAllowedKeys) {
       e.preventDefault();
-      editableRef.current?.blur();
+      if (e.key === 'Enter') {
+        editableRef.current.blur();
+      }
     }
   };
 
@@ -51,7 +75,13 @@ export function EditableTd({
       return;
     }
 
-    const hasChanged = content !== initialValue;
+    if (editableRef.current) {
+      if (initialValue) {
+        editableRef.current.innerHTML = numberFormat(Number(initialValue));
+      }
+    }
+
+    const hasChanged = !areEqualNumericValues(content, initialValue);
 
     if (hasChanged) {
       try {
@@ -70,6 +100,7 @@ export function EditableTd({
       className={className}
       ref={editableRef}
       onInput={handleInput}
+      onFocus={handleFocus}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
       contentEditable

@@ -10,10 +10,17 @@ export function formatPhoneNumber(phoneNumber: string): string {
   return formatted;
 }
 
+export function areEqualMobileValues(
+  value1: string = '',
+  value2: string = '',
+): boolean {
+  return value1.replace(/[^0-9]/g, '') === value2.replace(/[^0-9]/g, '');
+}
+
 export function areEqualNumericValues(
   value1: string | number,
   value2: string | number,
-) {
+): boolean {
   const normalize = (val: string | number) => {
     if (typeof val === 'string') {
       return Number(val.replace(/,/g, ''));

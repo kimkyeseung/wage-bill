@@ -19,7 +19,7 @@ export function EditableDateTd({ datumId, initialValue }: Props) {
       try {
         await updateWork(datumId, { date: date ?? undefined });
         toast.success('데이터가 변경되었습니다.');
-      } catch (error) {
+      } catch {
         toast.error('데이터 변경에 문제가 발생하였습니다.');
         router.refresh();
       }
