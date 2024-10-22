@@ -9,3 +9,17 @@ export function formatPhoneNumber(phoneNumber: string): string {
 
   return formatted;
 }
+
+export function areEqualNumericValues(
+  value1: string | number,
+  value2: string | number,
+) {
+  const normalize = (val: string | number) => {
+    if (typeof val === 'string') {
+      return Number(val.replace(/,/g, ''));
+    }
+    return Number(val);
+  };
+
+  return value1 || value2 ? normalize(value1) === normalize(value2) : true;
+}

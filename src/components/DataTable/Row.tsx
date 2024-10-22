@@ -2,9 +2,9 @@
 
 import { WorkDataResponse } from '@/types';
 import classNames from 'classnames';
-import { numberFormat } from '@/lib';
 import { EditableTd } from './EditableTd';
 import { EditableDateTd } from './EditableDateTd';
+import { numberFormat } from '@/lib';
 
 interface Props {
   datum: WorkDataResponse;
@@ -20,7 +20,8 @@ export function Row({ datum }: Props) {
     { name: 'workerMobile', value: datum.workerMobile },
     {
       name: 'payment',
-      value: datum.payment ? numberFormat(datum.payment) : '',
+      value: datum.payment,
+      displayValue: datum.payment ? numberFormat(Number(datum.payment)) : '',
     },
   ];
 
@@ -33,8 +34,9 @@ export function Row({ datum }: Props) {
           datumId={datum._id}
           name={field.name}
           initialValue={field.value}
+          isNumeric={field.name === 'payment'}
           dangerouslySetInnerHTML={{
-            __html: field.value,
+            __html: field.displayValue || field.value,
           }}
         />
       ))}
