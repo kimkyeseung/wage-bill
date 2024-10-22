@@ -2,11 +2,9 @@
 
 import { WorkDataResponse } from '@/types';
 import classNames from 'classnames';
-import { Td } from './Td';
-import dayjs from 'dayjs';
 import { numberFormat } from '@/lib';
-
-const DATE_FORMAT = 'MM/DD/YYYY';
+import { EditableTd } from './EditableTd';
+import { EditableDateTd } from './EditableDateTd';
 
 interface Props {
   datum: WorkDataResponse;
@@ -14,10 +12,6 @@ interface Props {
 
 export function Row({ datum }: Props) {
   const fields = [
-    {
-      name: 'date',
-      value: datum.date ? dayjs(datum.date).format(DATE_FORMAT) : '',
-    },
     { name: 'place', value: datum.place },
     { name: 'title', value: datum.title },
     { name: 'client', value: datum.client },
@@ -32,8 +26,9 @@ export function Row({ datum }: Props) {
 
   return (
     <tr className={classNames('hover:bg-gray-100')}>
+      <EditableDateTd datumId={datum._id} initialValue={datum.date} />
       {fields.map((field) => (
-        <Td
+        <EditableTd
           key={field.name}
           datumId={datum._id}
           name={field.name}
