@@ -9,4 +9,8 @@ export interface WorkData {
   workerMobile: string;
 }
 
+export interface WorkDataResponse extends WorkData {
+  _id: string;
+}
+
 export type WorkDataInput = Partial<WorkData>;

@@ -1,12 +1,6 @@
 import { Th } from './Th';
-import { Td } from './Td';
-import dayjs from 'dayjs';
-import { numberFormat } from '@/lib';
-import classNames from 'classnames';
-import { WorkData } from '@/types';
-import { fetchWorks } from '../actions';
-
-const DATE_FORMAT = 'MM/DD/YYYY';
+import { fetchWorks } from './actions';
+import { Row } from './Row';
 
 export async function DataTable() {
   const { data } = await fetchWorks();
@@ -28,18 +22,7 @@ export async function DataTable() {
 
       <tbody className="overflow-auto">
         {data.length ? (
-          data.map((datum: WorkData, index: number) => (
-            <tr key={index} className={classNames('hover:bg-slate-300')}>
-              <Td>{datum.date ? dayjs(datum.date).format(DATE_FORMAT) : ''}</Td>
-              <Td>{datum.place}</Td>
-              <Td>{datum.title}</Td>
-              <Td>{datum.client}</Td>
-              <Td>{datum.clientMobile}</Td>
-              <Td>{datum.workerName}</Td>
-              <Td>{datum.workerMobile}</Td>
-              <Td>{datum.payment ? numberFormat(datum.payment) : ''}</Td>
-            </tr>
-          ))
+          data.map((datum) => <Row key={datum._id} datum={datum} />)
         ) : (
           <tr>
             <td colSpan={10000} className="py-20 text-center">
