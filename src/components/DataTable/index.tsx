@@ -39,7 +39,7 @@ export async function DataTable() {
         <tr>
           <Td colSpan={10000} className="text-right border-none">
             <strong>일당 합계:</strong>
-            <span className="ml-4 inline-block w-24">
+            <span className="ml-4 inline-block min-w-24">
               {numberFormat(paymentTotal)} 원
             </span>
           </Td>

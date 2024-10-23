@@ -7,14 +7,22 @@ import * as Input from '@/components/input';
 import { createWork } from './actions';
 import classNames from 'classnames';
 import { allowOnlyNumber, formatPhoneNumber } from '@/lib';
+import toast from 'react-hot-toast';
 
 export function WorkForm() {
-  const { handleSubmit, control } = useForm({
+  const { handleSubmit, control, reset } = useForm({
     defaultValues,
   });
 
   async function onSubmit(values: WorkDataInput) {
-    await createWork(values);
+    try {
+      await createWork(values);
+      toast.success('데이터가 생성되었습니다.');
+      reset();
+    } catch (error) {
+      console.log(error);
+      toast.error('데이터 변경에 문제가 발생하였습니다.');
+    }
   }
 
   return (
@@ -33,7 +41,7 @@ export function WorkForm() {
             <Input.Date
               label="날짜"
               locale="ko"
-              dateFormat="yyyy. M. d (eee)"
+              dateFormat="yyyy. M. d."
               onChange={(date: Date | null) => field.onChange(date)}
               selected={field.value}
             />
