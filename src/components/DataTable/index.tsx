@@ -1,12 +1,17 @@
 import { Th } from './Th';
 import { fetchWorks } from './actions';
 import { Row } from './Row';
+import { sumBy } from 'lodash';
+import { numberFormat } from '@/lib';
+import { Td } from './Td';
 
 export async function DataTable() {
   const { data } = await fetchWorks();
 
+  const paymentTotal = sumBy(data, 'payment');
+
   return (
-    <table className="min-h-[200px] w-full table-auto">
+    <table className="min-h-[200px] w-full table-auto mb-[200px]">
       <thead>
         <tr className="bg-gray-2 text-left dark:bg-meta-4">
           <Th>날짜</Th>
@@ -30,6 +35,15 @@ export async function DataTable() {
             </td>
           </tr>
         )}
+
+        <tr>
+          <Td colSpan={10000} className="text-right border-none">
+            <strong>일당 합계:</strong>
+            <span className="ml-4 inline-block w-24">
+              {numberFormat(paymentTotal)} 원
+            </span>
+          </Td>
+        </tr>
       </tbody>
     </table>
   );

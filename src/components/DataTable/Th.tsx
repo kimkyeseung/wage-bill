@@ -8,7 +8,7 @@ interface Props
 export function Th({ children, className, ...props }: Props) {
   return (
     <th
-      className={classNames('px-2 py-2 font-medium text-black', className)}
+      className={classNames('px-2 py-3 text-lg text-gray-800', className)}
       {...props}
     >
       {children}

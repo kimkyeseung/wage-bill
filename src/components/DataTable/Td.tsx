@@ -1,10 +1,10 @@
 'use client';
 
 import classNames from 'classnames';
-import { forwardRef, HTMLAttributes, PropsWithChildren } from 'react';
+import { forwardRef, PropsWithChildren, TdHTMLAttributes } from 'react';
 
 interface Props
-  extends HTMLAttributes<HTMLTableCellElement>,
+  extends TdHTMLAttributes<HTMLTableCellElement>,
     PropsWithChildren {}
 
 export const Td = forwardRef<HTMLTableCellElement, Props>(function Td(
