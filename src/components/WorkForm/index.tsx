@@ -32,6 +32,8 @@ export function WorkForm() {
           render={({ field }) => (
             <Input.Date
               label="날짜"
+              locale="ko"
+              dateFormat="yyyy. M. d (eee)"
               onChange={(date: Date | null) => field.onChange(date)}
               selected={field.value}
             />

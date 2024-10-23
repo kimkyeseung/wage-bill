@@ -1,6 +1,7 @@
 'use client';
 
-import DatePicker from 'react-datepicker';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import { ko } from 'date-fns/locale/ko';
 import { updateWork } from '../actions';
 import { Td } from '../Td';
 import toast from 'react-hot-toast';
@@ -11,6 +12,8 @@ interface Props {
   datumId: string;
   initialValue: Date;
 }
+
+registerLocale('ko', ko);
 
 export function EditableDateTd({ datumId, initialValue }: Props) {
   const router = useRouter();
@@ -31,6 +34,8 @@ export function EditableDateTd({ datumId, initialValue }: Props) {
       <DatePicker
         selected={initialValue}
         onChange={handleUpdateDate}
+        locale="ko"
+        dateFormat="yyyy. M. d (eee)"
         required
         customInput={<ExampleCustomInput />}
       />
