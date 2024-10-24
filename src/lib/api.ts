@@ -3,7 +3,7 @@ type HttpMethod = 'GET' | 'POST' | 'PATCH';
 async function request<T>(
   path: string,
   method: HttpMethod,
-  body?: any,
+  body?: Record<string, unknown> | string | FormData,
   init?: RequestInit,
 ): Promise<{ data: T }> {
   try {
