@@ -1,17 +1,12 @@
 'use client';
 
-import {
-  HTMLAttributes,
-  KeyboardEventHandler,
-  PropsWithChildren,
-  useRef,
-  useState,
-} from 'react';
-import { updateWork } from './actions';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+import { HTMLAttributes, KeyboardEventHandler, PropsWithChildren } from 'react';
 import { Td } from './Td';
 import { areEqualMobileValues, formatPhoneNumber } from '@/lib';
+import { useEditableTd } from '@/hooks/useEditableTd';
+import { updateWork } from './actions';
+import { WorkDataInput } from '@/types';
+import { mapValues } from 'lodash';
 
 interface Props
   extends HTMLAttributes<HTMLTableCellElement>,
@@ -25,25 +20,24 @@ const mobileDigitLimit = 11;
 
 export function MobileFormatEditableTd({
   children,
-  className,
   datumId,
   name,
   initialValue,
   ...props
 }: Props) {
-  const editableRef = useRef<HTMLTableCellElement>(null);
-  const router = useRouter();
-  const [content, setContent] = useState(initialValue);
+  const { editableRef, handleInput, handleBlur } = useEditableTd({
+    datumId,
+    name,
+    initialValue,
+    formatValue: formatPhoneNumber,
+    compareValues: areEqualMobileValues,
+    handleMutate: (datumId: string, values: WorkDataInput) =>
+      updateWork(datumId, mapValues(values, formatPhoneNumber)),
+  });
 
   const handleFocus = () => {
     if (initialValue && editableRef.current) {
       editableRef.current.innerHTML = initialValue.replace(/-/g, '');
-    }
-  };
-
-  const handleInput = () => {
-    if (editableRef.current) {
-      setContent(editableRef.current.innerHTML);
     }
   };
 
@@ -75,34 +69,8 @@ export function MobileFormatEditableTd({
     }
   };
 
-  const handleBlur = async () => {
-    if (!editableRef.current) {
-      return;
-    }
-
-    if (editableRef.current) {
-      if (initialValue) {
-        editableRef.current.innerHTML = formatPhoneNumber(initialValue);
-      }
-    }
-
-    const hasChanged = !areEqualMobileValues(content, initialValue);
-
-    if (hasChanged) {
-      try {
-        await updateWork(datumId, { [name]: formatPhoneNumber(content) });
-        toast.success('데이터가 변경되었습니다.');
-      } catch (error) {
-        console.log(error);
-        toast.error('데이터 변경에 문제가 발생하였습니다.');
-        router.refresh();
-      }
-    }
-  };
-
   return (
     <Td
-      className={className}
       ref={editableRef}
       onInput={handleInput}
       onFocus={handleFocus}

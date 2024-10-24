@@ -1,17 +1,10 @@
 'use client';
 
-import {
-  HTMLAttributes,
-  KeyboardEventHandler,
-  PropsWithChildren,
-  useRef,
-  useState,
-} from 'react';
-import { updateWork } from './actions';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+import { HTMLAttributes, KeyboardEventHandler, PropsWithChildren } from 'react';
 import { Td } from './Td';
 import { areEqualNumericValues, numberFormat } from '@/lib';
+import { useEditableTd } from '@/hooks/useEditableTd';
+import { updateWork } from './actions';
 
 interface Props
   extends HTMLAttributes<HTMLTableCellElement>,
@@ -23,29 +16,19 @@ interface Props
 
 export function NumericEditableTd({
   children,
-  className,
   datumId,
   name,
   initialValue,
   ...props
 }: Props) {
-  const editableRef = useRef<HTMLTableCellElement>(null);
-  const router = useRouter();
-  const [content, setContent] = useState(
-    initialValue ? String(initialValue) : '',
-  );
-
-  const handleFocus = () => {
-    if (initialValue && editableRef.current) {
-      editableRef.current.innerHTML = String(initialValue);
-    }
-  };
-
-  const handleInput = () => {
-    if (editableRef.current) {
-      setContent(editableRef.current.innerHTML);
-    }
-  };
+  const { editableRef, handleInput, handleBlur, handleFocus } = useEditableTd({
+    datumId,
+    name,
+    initialValue,
+    formatValue: numberFormat,
+    compareValues: areEqualNumericValues,
+    handleMutate: updateWork,
+  });
 
   const handleKeyDown: KeyboardEventHandler<HTMLTableCellElement> = (e) => {
     if (!editableRef.current) {
@@ -70,34 +53,8 @@ export function NumericEditableTd({
     }
   };
 
-  const handleBlur = async () => {
-    if (!editableRef.current) {
-      return;
-    }
-
-    if (editableRef.current) {
-      if (initialValue) {
-        editableRef.current.innerHTML = numberFormat(Number(initialValue));
-      }
-    }
-
-    const hasChanged = !areEqualNumericValues(content, initialValue);
-
-    if (hasChanged) {
-      try {
-        await updateWork(datumId, { [name]: content });
-        toast.success('데이터가 변경되었습니다.');
-      } catch (error) {
-        console.log(error);
-        toast.error('데이터 변경에 문제가 발생하였습니다.');
-        router.refresh();
-      }
-    }
-  };
-
   return (
     <Td
-      className={className}
       ref={editableRef}
       onInput={handleInput}
       onFocus={handleFocus}

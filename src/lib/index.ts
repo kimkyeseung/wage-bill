@@ -1,9 +1,13 @@
-export const { format: numberFormat } = Intl.NumberFormat('en-US');
+export const { format } = Intl.NumberFormat('en-US');
+
+export function numberFormat(value: number | string): string {
+  return value ? format(Number(value)) : '';
+}
 
 export const allowOnlyNumber = (value: string) => value.replace(/[^0-9]/g, '');
 
-export function formatPhoneNumber(phoneNumber: string): string {
-  const cleaned = phoneNumber.replace(/[^0-9]/g, '');
+export function formatPhoneNumber(phoneNumber: string | number): string {
+  const cleaned = String(phoneNumber).replace(/[^0-9]/g, '');
 
   const formatted = cleaned.replace(/(\d)(?=(\d{4})+(?!\d))/g, '$1-');
 
@@ -11,10 +15,13 @@ export function formatPhoneNumber(phoneNumber: string): string {
 }
 
 export function areEqualMobileValues(
-  value1: string = '',
-  value2: string = '',
+  value1: number | string = '',
+  value2: number | string = '',
 ): boolean {
-  return value1.replace(/[^0-9]/g, '') === value2.replace(/[^0-9]/g, '');
+  return (
+    String(value1).replace(/[^0-9]/g, '') ===
+    String(value2).replace(/[^0-9]/g, '')
+  );
 }
 
 export function areEqualNumericValues(
@@ -23,9 +30,9 @@ export function areEqualNumericValues(
 ): boolean {
   const normalize = (val: string | number) => {
     if (typeof val === 'string') {
-      return Number(val.replace(/,/g, ''));
+      return val ? Number(val.replace(/,/g, '')) : '';
     }
-    return Number(val);
+    return val ? Number(val) : '';
   };
 
   return value1 || value2 ? normalize(value1) === normalize(value2) : true;

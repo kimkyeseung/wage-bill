@@ -29,7 +29,7 @@ function useQueryState(
   // 쿼리 파라미터가 변경되면 상태도 업데이트
   useEffect(() => {
     setState(String(queryValue));
-  }, [searchParams, key]);
+  }, [queryValue]);
 
   return [state, setQueryState];
 }
