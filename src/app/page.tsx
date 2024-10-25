@@ -3,13 +3,29 @@ import { Filter } from '@/components/Filter';
 import { Title } from '@/components/Title';
 import { WorkForm } from '@/components/WorkForm';
 import { WorkDataParams } from '@/types';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
 import classNames from 'classnames';
+import { fetchWorks } from './actions';
 
 interface PageProps {
   searchParams: WorkDataParams;
 }
 
-export default function Home({ searchParams }: PageProps) {
+export default async function Home({ searchParams }: PageProps) {
+  const queryClient = new QueryClient();
+  const { month, year } = searchParams;
+
+  await queryClient.prefetchQuery({
+    queryKey: ['fetchWorks', { month, year }],
+    queryFn: async () => await fetchWorks({ month, year }),
+  });
+
+  const dehydratedState = dehydrate(queryClient);
+
   return (
     <div
       className={classNames(
@@ -20,7 +36,9 @@ export default function Home({ searchParams }: PageProps) {
     >
       <Title />
       <Filter />
-      <DataTable {...searchParams} />
+      <HydrationBoundary state={dehydratedState}>
+        <DataTable {...searchParams} />
+      </HydrationBoundary>
       <WorkForm />
     </div>
   );

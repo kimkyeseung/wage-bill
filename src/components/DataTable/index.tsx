@@ -1,40 +1,21 @@
 'use client';
 
 import { Th } from './Th';
-import { fetchWorks } from './actions';
+import { fetchWorks } from '../../app/actions';
 import { Row } from './Row';
 import { sumBy } from 'lodash';
 import { numberFormat } from '@/lib';
 import { Td } from './Td';
-import { WorkDataParams, WorkDataResponse } from '@/types';
-import { useEffect, useState } from 'react';
+import { WorkDataParams } from '@/types';
+import { useQuery } from '@tanstack/react-query';
 
 export function DataTable({ month, year }: WorkDataParams) {
-  const [data, setData] = useState<WorkDataResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: works } = useQuery({
+    queryKey: ['fetchWorks', { month, year }],
+    queryFn: () => fetchWorks({ month, year }),
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-
-      try {
-        const { data } = await fetchWorks({ month, year });
-        setData(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [month, year]);
-
-  const paymentTotal = sumBy(data, 'payment');
-
-  if (isLoading) {
-    return 'loading...';
-  }
+  const paymentTotal = sumBy(works?.data, 'payment');
 
   return (
     <div>
@@ -53,8 +34,8 @@ export function DataTable({ month, year }: WorkDataParams) {
         </thead>
 
         <tbody className="overflow-auto pb-[200px]">
-          {data.length ? (
-            data.map((datum) => <Row key={datum._id} datum={datum} />)
+          {works?.data.length ? (
+            works.data.map((datum) => <Row key={datum._id} datum={datum} />)
           ) : (
             <tr>
               <td colSpan={10000} className="py-20 text-center">
