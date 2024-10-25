@@ -51,7 +51,6 @@ export function useEditableTd({
   const handleInput = () => {
     if (editableRef.current) {
       setContent(editableRef.current.innerHTML);
-      console.log(content);
     }
   };
 
