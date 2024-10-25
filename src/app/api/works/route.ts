@@ -1,15 +1,32 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import Work from '@/models/Work';
+import { getDateRange } from '@/lib';
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     await connectToDatabase();
-    const works = await Work.find({});
+    const url = new URL(req.url);
+
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth();
+    const year = Number(url.searchParams.get('year') ?? currentYear);
+    const month = Number(url.searchParams.get('month') ?? currentMonth);
+
+    const { startDate, endDate } = getDateRange(
+      year,
+      month,
+      currentYear,
+      currentMonth,
+    );
+
+    const query = { date: { $gte: startDate, $lt: endDate } };
+    const works = await Work.find(query);
+
     return NextResponse.json({ success: true, data: works });
   } catch {
     return NextResponse.json(
-      { success: false, message: 'Failed to fetch users' },
+      { success: false, message: 'Failed to fetch works' },
       { status: 500 },
     );
   }

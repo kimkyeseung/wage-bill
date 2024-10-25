@@ -7,10 +7,6 @@ async function request<T>(
   init?: RequestInit,
 ): Promise<{ data: T }> {
   try {
-    if (!path.startsWith('/')) {
-      throw new Error('path must start with `/`');
-    }
-
     const options: RequestInit = {
       method,
       headers: {
@@ -23,10 +19,7 @@ async function request<T>(
       options.body = JSON.stringify(body);
     }
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}${path}`,
-      options,
-    );
+    const response = await fetch(`${path}`, options);
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -39,11 +32,31 @@ async function request<T>(
   }
 }
 
+function buildUrlWithQueryParams(path: string, params: Record<string, any>) {
+  const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}${path}`);
+  Object.keys(params).forEach((key) => {
+    if (params[key] !== undefined) {
+      url.searchParams.append(key, params[key]);
+    }
+  });
+  return url.toString();
+}
+
 export async function get<T>(
   path: string,
+  params?: { year?: number; month?: number },
   init?: RequestInit,
 ): Promise<{ data: T }> {
-  return request<T>(path, 'GET', undefined, init);
+  try {
+    const url = params
+      ? buildUrlWithQueryParams(path, params)
+      : `${process.env.NEXT_PUBLIC_API_URL}${path}`;
+
+    return request<T>(url, 'GET', undefined, init);
+  } catch (error) {
+    console.error(error);
+    return { data: [] as T };
+  }
 }
 
 export async function post<T>(
@@ -51,7 +64,12 @@ export async function post<T>(
   body = {},
   init?: RequestInit,
 ): Promise<{ data: T }> {
-  return request<T>(path, 'POST', body, init);
+  return request<T>(
+    `${process.env.NEXT_PUBLIC_API_URL}${path}`,
+    'POST',
+    body,
+    init,
+  );
 }
 
 export async function patch<T>(
@@ -59,5 +77,10 @@ export async function patch<T>(
   body = {},
   init?: RequestInit,
 ): Promise<{ data: T }> {
-  return request<T>(path, 'PATCH', body, init);
+  return request<T>(
+    `${process.env.NEXT_PUBLIC_API_URL}${path}`,
+    'PATCH',
+    body,
+    init,
+  );
 }

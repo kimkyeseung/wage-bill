@@ -37,3 +37,27 @@ export function areEqualNumericValues(
 
   return value1 || value2 ? normalize(value1) === normalize(value2) : true;
 }
+
+export function getDateRange(
+  year: number,
+  month: number,
+  currentYear: number,
+  currentMonth: number,
+) {
+  if (year && month) {
+    return {
+      startDate: new Date(year, month, 1),
+      endDate: new Date(year, month + 1, 1),
+    };
+  } else if (year) {
+    return {
+      startDate: new Date(year, 0, 1),
+      endDate: new Date(year + 1, 0, 1),
+    };
+  } else {
+    return {
+      startDate: new Date(currentYear, currentMonth, 1),
+      endDate: new Date(currentYear, currentMonth + 1, 1),
+    };
+  }
+}

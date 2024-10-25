@@ -2,9 +2,14 @@ import { DataTable } from '@/components/DataTable';
 import { Filter } from '@/components/Filter';
 import { Title } from '@/components/Title';
 import { WorkForm } from '@/components/WorkForm';
+import { WorkDataParams } from '@/types';
 import classNames from 'classnames';
 
-export default function Home() {
+interface PageProps {
+  searchParams: WorkDataParams;
+}
+
+export default function Home({ searchParams }: PageProps) {
   return (
     <div
       className={classNames(
@@ -15,7 +20,7 @@ export default function Home() {
     >
       <Title />
       <Filter />
-      <DataTable />
+      <DataTable {...searchParams} />
       <WorkForm />
     </div>
   );

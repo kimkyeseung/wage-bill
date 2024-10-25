@@ -1,14 +1,40 @@
+'use client';
+
 import { Th } from './Th';
 import { fetchWorks } from './actions';
 import { Row } from './Row';
 import { sumBy } from 'lodash';
 import { numberFormat } from '@/lib';
 import { Td } from './Td';
+import { WorkDataParams, WorkDataResponse } from '@/types';
+import { useEffect, useState } from 'react';
 
-export async function DataTable() {
-  const { data } = await fetchWorks();
+export function DataTable({ month, year }: WorkDataParams) {
+  const [data, setData] = useState<WorkDataResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+
+      try {
+        const { data } = await fetchWorks({ month, year });
+        setData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [month, year]);
 
   const paymentTotal = sumBy(data, 'payment');
+
+  if (isLoading) {
+    return 'loading...';
+  }
 
   return (
     <div>
