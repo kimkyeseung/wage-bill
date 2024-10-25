@@ -32,11 +32,14 @@ async function request<T>(
   }
 }
 
-function buildUrlWithQueryParams(path: string, params: Record<string, any>) {
+function buildUrlWithQueryParams(
+  path: string,
+  params: Record<string, string | number>,
+) {
   const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}${path}`);
   Object.keys(params).forEach((key) => {
     if (params[key] !== undefined) {
-      url.searchParams.append(key, params[key]);
+      url.searchParams.append(key, String(params[key]));
     }
   });
   return url.toString();
