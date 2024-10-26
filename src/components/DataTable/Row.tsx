@@ -27,41 +27,34 @@ export function Row({ datum }: Props) {
     <tr className={classNames('hover:bg-gray-100')}>
       <EditableDateTd datumId={datum._id} initialValue={datum.date} />
       {fields.map((field) => {
+        function getProps<T = string>(
+          formatHtml?: (value: string | number) => string,
+        ) {
+          return {
+            datumId: datum._id,
+            name: field.name,
+            initialValue: field.value as T,
+            dangerouslySetInnerHTML: {
+              __html: formatHtml ? formatHtml(field.value) : field.value,
+            },
+          };
+        }
+
         switch (field.type) {
           case 'text':
-            return (
-              <EditableTd
-                key={field.name}
-                datumId={datum._id}
-                name={field.name}
-                initialValue={field.value}
-                dangerouslySetInnerHTML={{
-                  __html: field.value,
-                }}
-              />
-            );
+            return <EditableTd key={field.name} {...getProps()} />;
           case 'mobile-format':
             return (
               <MobileFormatEditableTd
                 key={field.name}
-                datumId={datum._id}
-                name={field.name}
-                initialValue={field.value as string}
-                dangerouslySetInnerHTML={{
-                  __html: field.value,
-                }}
+                {...getProps<string>()}
               />
             );
           case 'numeric':
             return (
               <NumericEditableTd
                 key={field.name}
-                datumId={datum._id}
-                name={field.name}
-                initialValue={field.value as number}
-                dangerouslySetInnerHTML={{
-                  __html: field.value && numberFormat(Number(field.value)),
-                }}
+                {...getProps<number>((val) => numberFormat(Number(val)))}
               />
             );
         }
