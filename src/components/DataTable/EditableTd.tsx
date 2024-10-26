@@ -20,13 +20,13 @@ export function EditableTd({
   children,
   ...props
 }: Props) {
-  const { editableRef, handleInput, handleBlur, handleFocus } = useEditableTd({
-    datumId,
-    name,
-    initialValue,
-    handleMutate: updateWork,
-  });
-
+  const { editableRef, handleInput, handleBlur, handleFocus, isOnEdit } =
+    useEditableTd({
+      datumId,
+      name,
+      initialValue,
+      handleMutate: updateWork,
+    });
   const handleKeyDown: KeyboardEventHandler<HTMLTableCellElement> = (e) => {
     if (e.keyCode === 229) return; // 한글 입력시 마지막 글자가 중복입력 되는 문제 해결하기 위해 필요.
     if (e.key === 'Enter') {
@@ -42,7 +42,7 @@ export function EditableTd({
       onBlur={handleBlur}
       onFocus={handleFocus}
       onKeyDown={handleKeyDown}
-      contentEditable
+      contentEditable={isOnEdit}
       {...props}
     >
       {children}

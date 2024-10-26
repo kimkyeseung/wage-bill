@@ -7,6 +7,8 @@ import { Td } from '../Td';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { ExampleCustomInput } from './CustomDateInput';
+import { Context } from '../DataTableContext';
+import { useContext } from 'react';
 
 interface Props {
   datumId: string;
@@ -16,7 +18,10 @@ interface Props {
 registerLocale('ko', ko);
 
 export function EditableDateTd({ datumId, initialValue }: Props) {
+  const { isOnEdit } = useContext(Context);
+
   const router = useRouter();
+
   const handleUpdateDate = async (date: Date | null) => {
     if (initialValue !== date) {
       try {
@@ -38,6 +43,8 @@ export function EditableDateTd({ datumId, initialValue }: Props) {
         dateFormat="yyyy. M. d (eee)"
         required
         customInput={<ExampleCustomInput />}
+        disabled={!isOnEdit}
+        className="cursor-default"
       />
     </Td>
   );

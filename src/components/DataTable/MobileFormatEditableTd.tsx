@@ -25,7 +25,7 @@ export function MobileFormatEditableTd({
   initialValue,
   ...props
 }: Props) {
-  const { editableRef, handleInput, handleBlur } = useEditableTd({
+  const { editableRef, handleInput, handleBlur, isOnEdit } = useEditableTd({
     datumId,
     name,
     initialValue,
@@ -76,7 +76,7 @@ export function MobileFormatEditableTd({
       onFocus={handleFocus}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
-      contentEditable
+      contentEditable={isOnEdit}
       {...props}
     >
       {children}

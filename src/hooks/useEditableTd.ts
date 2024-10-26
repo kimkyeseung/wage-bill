@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { WorkDataInput } from '@/types';
+import { Context } from '@/components/DataTable/DataTableContext';
 
 type FormatValueFunction = {
   (value: string): string;
@@ -42,6 +43,8 @@ export function useEditableTd({
     initialValue ? String(initialValue) : '',
   );
 
+  const { isOnEdit } = useContext(Context);
+
   const handleFocus = () => {
     if (initialValue && editableRef.current) {
       editableRef.current.innerHTML = String(initialValue);
@@ -78,6 +81,7 @@ export function useEditableTd({
   };
 
   return {
+    isOnEdit,
     editableRef,
     content,
     handleFocus,

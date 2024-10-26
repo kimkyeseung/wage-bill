@@ -21,14 +21,15 @@ export function NumericEditableTd({
   initialValue,
   ...props
 }: Props) {
-  const { editableRef, handleInput, handleBlur, handleFocus } = useEditableTd({
-    datumId,
-    name,
-    initialValue,
-    formatValue: numberFormat,
-    compareValues: areEqualNumericValues,
-    handleMutate: updateWork,
-  });
+  const { editableRef, handleInput, handleBlur, handleFocus, isOnEdit } =
+    useEditableTd({
+      datumId,
+      name,
+      initialValue,
+      formatValue: numberFormat,
+      compareValues: areEqualNumericValues,
+      handleMutate: updateWork,
+    });
 
   const handleKeyDown: KeyboardEventHandler<HTMLTableCellElement> = (e) => {
     if (!editableRef.current) {
@@ -60,7 +61,7 @@ export function NumericEditableTd({
       onFocus={handleFocus}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
-      contentEditable
+      contentEditable={isOnEdit}
       {...props}
     >
       {children}
