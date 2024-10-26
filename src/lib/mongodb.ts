@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI as string;
+const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME;
 
 if (!MONGODB_URI) {
   throw new Error(
@@ -12,7 +13,7 @@ async function connectToDatabase() {
   return mongoose
     .connect(MONGODB_URI, {
       autoIndex: true,
-      dbName: '노임청구서',
+      dbName: MONGODB_DB_NAME,
     })
     .then((mongoose) => {
       return mongoose.connection;
